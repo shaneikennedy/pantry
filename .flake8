@@ -1,0 +1,10 @@
+[flake8]
+exclude =
+    .git,
+    __pycache__,
+    # ignore tests
+    test_*,
+    # ignore django migrations directories
+    pantry/*/migrations/*,
+    # ignore config
+    pantry/settings.py,

@@ -1,0 +1,19 @@
+### SHARED GITIGNORE ###
+# NOTE! Please only add shared gitignore settings here since this is shared by everyone in the project.
+# If you want to add your own custom gitignore rules, on top of this, use .git/info/excludes
+# That file is not versioned and only local on your machine.
+
+# Virtual environment
+venv
+env
+.python-version
+
+# Compiled files
+*.pyc
+
+# Temp files
+tmp
+.DS_Store
+
+# IDE and project files
+.vscode/
