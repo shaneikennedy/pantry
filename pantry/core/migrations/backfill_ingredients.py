@@ -10,18 +10,20 @@ def backfill_ingredients(apps, schema_editor):
     with open(f'{path}/ingredients.txt') as f:
         data = f.readlines()
 
-    ingredients = [
-        Ingredient(name=line.strip().lower())
-        for line in data
-    ]
-
-    Ingredient.objects.bulk_create(ingredients)
+    for line in data:
+        i = Ingredient(name=line.strip().lower())
+        try:
+            i.save()
+            print(f'Saving {i.name}')
+        except Exception:
+            print(f'Could not save duplicate {i.name}')
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
-        ('core', '0001_initial'),
+        ('core', '0001_auto_20200513_1952'),
     ]
 
     operations = [
