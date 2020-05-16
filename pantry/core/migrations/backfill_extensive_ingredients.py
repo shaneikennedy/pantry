@@ -2,12 +2,13 @@ from django.db import migrations
 import pathlib
 
 
-def backfill_ingredients(apps, schema_editor):
+def backfill_extensive_ingredients(apps, schema_editor):
 
     Ingredient = apps.get_model('core', 'Ingredient')
 
     path = pathlib.Path(__file__).parent.absolute()
-    with open(f'{path}/ingredients.txt') as f:
+    
+    with open(f'{path}/extensive_ingredients.txt') as f:
         data = f.readlines()
 
     for line in data:
@@ -23,9 +24,9 @@ class Migration(migrations.Migration):
     atomic = False
 
     dependencies = [
-        ('core', '0001_auto_20200513_1952'),
+        ('core', 'backfill_ingredients'),
     ]
 
     operations = [
-        migrations.RunPython(backfill_ingredients),
+        migrations.RunPython(backfill_extensive_ingredients),
     ]
