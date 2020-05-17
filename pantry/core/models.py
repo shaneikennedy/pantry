@@ -6,6 +6,9 @@ class Ingredient(models.Model):
 
     objects = models.Manager()
 
+    def __str__(self):
+        return self.name
+
 
 class Recipe(models.Model):
     name = models.CharField(max_length=100)
@@ -16,6 +19,9 @@ class Recipe(models.Model):
     )
 
     objects = models.Manager()
+
+    def __str__(self):
+        return self.name
 
 
 class RecipeIngredient(models.Model):
@@ -41,3 +47,9 @@ class RecipeIngredient(models.Model):
         unique_together = ['ingredient', 'recipe']
 
     objects = models.Manager()
+
+    def __str__(self):
+        return (
+            f'{self.quantity} {self.units} '
+            f'of {self.ingredient} for {self.recipe}'
+        )
