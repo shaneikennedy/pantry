@@ -6,6 +6,9 @@ class Ingredient(models.Model):
 
     objects = models.Manager()
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 
