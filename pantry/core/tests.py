@@ -7,23 +7,32 @@ from .models import Ingredient
 class IngredientsAPITests(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.url = reverse('ingredients')
+        cls.ingredient_names = [
+            "apple",
+            "cucumber",
+            "artichoke",
+            "banana",
+            "pepper",
+        ]
+        [Ingredient.objects.create(name=name) for name in cls.ingredient_names]
+
+        cls.url = reverse("ingredients")
 
     def test_GET__ReturnAllIngredients(self):
-        # Arrange
-        expected_num_ingredients = Ingredient.objects.count()
-
         # Act
         response = self.client.get(self.url)
 
         # Assert
+        expected_num_ingredients = Ingredient.objects.count()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), expected_num_ingredients)
 
+        response_names = [item["name"] for item in response.data]
+
+        for name in response_names:
+            self.assertIn(name, self.ingredient_names)
+
     def test_GET_SearchByName_ReturFiiteredResults(self):
-        expected_num_ingredients = Ingredient.objects.filter(
-            name="artichoke"
-        ).count()
         params = {
             "item": "artichoke",
         }
@@ -31,7 +40,8 @@ class IngredientsAPITests(APITestCase):
         response = self.client.get(self.url, params)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), expected_num_ingredients)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual("artichoke", response.data[0]["name"])
 
     def test_GET_EmptySearch_ShouldReturnAllIngredients(self):
         expected_num_ingredients = Ingredient.objects.count()
