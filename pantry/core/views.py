@@ -1,5 +1,5 @@
-from .serializers import IngredientSerializer
-from .models import Ingredient
+from .serializers import IngredientSerializer, RecipeSerializer
+from .models import Ingredient, Recipe
 from rest_framework.views import APIView, Response
 from rest_framework import status
 
@@ -30,3 +30,18 @@ class IngredientAPIView(APIView):
 
 
 ingredients_api = IngredientAPIView.as_view()
+
+
+class RecipesAPIView(APIView):
+    def get(self, request):
+        recipes = (
+            Recipe
+            .objects
+            .prefetch_related('recipeingredient_set')
+            .all()
+        )
+        serializer = RecipeSerializer(recipes, many=True)
+        return Response(serializer.data)
+
+
+recipes_api = RecipesAPIView.as_view()

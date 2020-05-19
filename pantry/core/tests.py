@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from .models import Ingredient
+from .models import Ingredient, Recipe, RecipeIngredient
 
 
 class IngredientsAPITests(APITestCase):
@@ -75,3 +75,42 @@ class IngredientsAPITests(APITestCase):
         pear_ingredient = Ingredient.objects.filter(name="Pear").first()
         self.assertIsNotNone(pear_ingredient)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+class RecipesAPITests(APITestCase):
+    def test_GET__ReturnAllRecipes(self):
+        # Arrange
+        recipe_name = 'Pasta'
+        recipe_instructions = 'Make the pasta'
+        ingredient1 = Ingredient.objects.create(name='tomato')
+        ingredient2 = Ingredient.objects.create(name='basil')
+        recipe = Recipe.objects.create(
+            name=recipe_name, instructions=recipe_instructions
+        )
+        RecipeIngredient.objects.create(
+            recipe=recipe,
+            ingredient=ingredient1,
+            quantity=300,
+            units='G',
+        )
+        RecipeIngredient.objects.create(
+            recipe=recipe,
+            ingredient=ingredient2,
+            quantity=10,
+            units='G',
+        )
+        url = reverse('recipes')
+
+        # Act
+        response = self.client.get(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], 'Pasta')
+        self.assertEqual(response.data[0]['instructions'], 'Make the pasta')
+        self.assertEqual(response.data[0]['ingredients'][0]['name'], 'tomato')
+        self.assertEqual(response.data[0]['ingredients'][0]['quantity'], 300)
+        self.assertEqual(response.data[0]['ingredients'][0]['units'], 'G')
+        self.assertEqual(response.data[0]['ingredients'][1]['name'], 'basil')
+        self.assertEqual(response.data[0]['ingredients'][1]['quantity'], 10)
+        self.assertEqual(response.data[0]['ingredients'][1]['units'], 'G')
