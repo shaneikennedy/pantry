@@ -52,3 +52,26 @@ class IngredientsAPITests(APITestCase):
         response = self.client.get(self.url, params)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), expected_num_ingredients)
+
+    def test_POST_IngredientAlreadyExists_IngredientNotCreated(self):
+        # Arrange
+        Ingredient.objects.create(name="Kiwi")
+        new_ingredient_data = {"name": "Kiwi"}
+
+        # Act
+        response = self.client.post(self.url, new_ingredient_data)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_POST_VaildData_CreateNewIngredient(self):
+        # Arrange
+        ingredient_data = {"name": "Pear"}
+
+        # Act
+        response = self.client.post(self.url, ingredient_data)
+
+        # Assert
+        pear_ingredient = Ingredient.objects.filter(name="Pear").first()
+        self.assertIsNotNone(pear_ingredient)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
