@@ -11,7 +11,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-    name = serializers.StringRelatedField(source='ingredient')
+    name = serializers.StringRelatedField(source='ingredient', read_only=True)
 
     class Meta:
         model = RecipeIngredient
@@ -19,6 +19,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
             'name',
             'quantity',
             'units',
+            'ingredient'
         )
 
 
@@ -35,3 +36,15 @@ class RecipeSerializer(serializers.ModelSerializer):
             'instructions',
             'ingredients',
         )
+
+    def create(self, validated_data):
+        recipe_ingredients = validated_data.pop("recipeingredient_set")
+        recipe = Recipe.objects.create(**validated_data)
+        for recipe_ingredient in recipe_ingredients:
+            RecipeIngredient.objects.create(recipe=recipe, **recipe_ingredient)
+        return recipe
+
+
+
+
+
