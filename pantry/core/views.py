@@ -1,5 +1,5 @@
-from .serializers import IngredientSerializer
-from .models import Ingredient
+from .serializers import IngredientSerializer, RecipeSerializer
+from .models import Ingredient, Recipe
 from rest_framework.views import APIView, Response
 from rest_framework import status
 
@@ -30,3 +30,25 @@ class IngredientAPIView(APIView):
 
 
 ingredients_api = IngredientAPIView.as_view()
+
+
+class RecipesAPIView(APIView):
+    def get(self, request):
+        recipes = Recipe.objects.prefetch_related("recipeingredient_set").all()
+        serializer = RecipeSerializer(recipes, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        recipe = request.data
+        serializer = RecipeSerializer(data=recipe)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(
+            data=serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+recipes_api = RecipesAPIView.as_view()
