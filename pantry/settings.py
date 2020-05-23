@@ -88,7 +88,7 @@ DATABASES = {
         'NAME': 'pantry',
         'USER': 'postgres',
         'PASSWORD': 'root',
-        'HOST': '',
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
         'PORT': '5432',
     }
 }
