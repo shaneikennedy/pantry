@@ -43,8 +43,3 @@ class RecipeSerializer(serializers.ModelSerializer):
         for recipe_ingredient in recipe_ingredients:
             RecipeIngredient.objects.create(recipe=recipe, **recipe_ingredient)
         return recipe
-
-
-
-
-
