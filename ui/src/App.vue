@@ -1,28 +1,19 @@
 <template>
-  <div id="app">
-    Hello pantry
-    <ul>
-      <li v-for="ingredient in ingredients" :key="ingredient.id">
-        {{ ingredient.name }}
-      </li>
-    </ul>
+  <div
+    class="pantry-bg-body"
+    id="app"
+  >
+    <navbar />
+    <router-view class="h-screen" />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import Navbar from './components/Navbar';
 
 export default {
   name: 'App',
-  data() {
-    return {
-      ingredients: [],
-    };
-  },
-  async mounted() {
-    const response = await axios.get('/api/ingredients');
-    this.ingredients = response.data;
-  },
+  components: { Navbar },
 }
 </script>
 
@@ -30,6 +21,5 @@ export default {
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
