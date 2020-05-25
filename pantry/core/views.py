@@ -2,9 +2,12 @@ from .serializers import IngredientSerializer, RecipeSerializer
 from .models import Ingredient, Recipe
 from rest_framework.views import APIView, Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 
 class IngredientAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         ingredients = Ingredient.objects.all()
         item = self.request.query_params.get("item", "")
@@ -33,6 +36,8 @@ ingredients_api = IngredientAPIView.as_view()
 
 
 class RecipesAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         recipes = Recipe.objects.prefetch_related("recipeingredient_set").all()
         serializer = RecipeSerializer(recipes, many=True)

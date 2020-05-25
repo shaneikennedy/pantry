@@ -1,6 +1,9 @@
 from .serializers import UserSerializer
+from django.contrib.auth import login
 from rest_framework.views import APIView, Response
 from rest_framework import status
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from knox.views import LoginView as KnoxLoginView
 
 
 class RegisterAPIView(APIView):
@@ -10,7 +13,9 @@ class RegisterAPIView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(
+                data=serializer.data, status=status.HTTP_201_CREATED
+            )
 
         return Response(
             data=serializer.errors, status=status.HTTP_400_BAD_REQUEST
@@ -18,3 +23,15 @@ class RegisterAPIView(APIView):
 
 
 register_api = RegisterAPIView.as_view()
+
+
+class LoginAPIView(KnoxLoginView):
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return super().post(request, format=None)
+
+
+login_api = LoginAPIView.as_view()
