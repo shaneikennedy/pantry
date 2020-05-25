@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication', ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 25,
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
@@ -39,6 +40,7 @@ REST_FRAMEWORK = {
 
 INSTALLED_APPS = [
     'pantry.core.apps.CoreConfig',
+    'pantry.accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'rest_framework',
+    'knox',
 ]
 
 MIDDLEWARE = [
