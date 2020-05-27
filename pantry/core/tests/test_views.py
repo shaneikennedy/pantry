@@ -2,6 +2,7 @@ from rest_framework import status
 from ..models import Ingredient, Recipe, RecipeIngredient
 from rest_framework.test import APITestCase
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class IngredientsAPITests(APITestCase):
@@ -14,9 +15,15 @@ class IngredientsAPITests(APITestCase):
             "banana",
             "pepper",
         ]
+        cls.user = User.objects.create_user(
+            email="test@123.com", username="test123", password="123456",
+        )
         [Ingredient.objects.create(name=name) for name in cls.ingredient_names]
 
         cls.url = reverse("ingredients")
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
 
     def test_GET__ReturnAllIngredients(self):
         # Act
@@ -78,6 +85,15 @@ class IngredientsAPITests(APITestCase):
 
 
 class RecipesAPITests(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            email="test@123.com", username="test123", password="123456",
+        )
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
     def test_GET__ReturnAllRecipes(self):
         # Arrange
         recipe_name = "Pasta"
@@ -151,5 +167,7 @@ class RecipesAPITests(APITestCase):
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        recipe_objects = Recipe.objects.filter(name="", instructions="Make pasta")
+        recipe_objects = Recipe.objects.filter(
+            name="", instructions="Make pasta"
+        )
         self.assertEqual(0, recipe_objects.count())
