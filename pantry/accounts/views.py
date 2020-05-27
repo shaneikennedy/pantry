@@ -1,7 +1,7 @@
 from .serializers import UserSerializer
 from django.contrib.auth import login
 from rest_framework.views import APIView, Response
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 
@@ -26,6 +26,8 @@ register_api = RegisterAPIView.as_view()
 
 
 class LoginAPIView(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request, format=None):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
