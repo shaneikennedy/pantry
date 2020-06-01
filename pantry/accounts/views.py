@@ -7,6 +7,9 @@ from knox.views import LoginView as KnoxLoginView
 
 
 class RegisterAPIView(APIView):
+    authentication_classes = []
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request):
         user_data = request.data
         serializer = UserSerializer(data=user_data)
@@ -26,6 +29,7 @@ register_api = RegisterAPIView.as_view()
 
 
 class LoginAPIView(KnoxLoginView):
+    authentication_classes = []
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
