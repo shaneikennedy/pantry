@@ -4,7 +4,7 @@ import App from './App.vue';
 import Home from './Home.vue';
 import Recipes from './Recipes.vue';
 import Login from './Login.vue';
-
+import store from './store';
 
 import axios from 'axios';
 const authHeader = 'Token ' + localStorage.getItem('jwtToken');
@@ -41,5 +41,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app');
