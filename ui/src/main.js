@@ -1,7 +1,13 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './App.vue';
+import Home from './Home.vue';
+import Recipes from './Recipes.vue';
 
+
+import axios from 'axios';
+const authHeader = 'Token ' + localStorage.getItem('jwtToken');
+axios.defaults.headers.common['Authorization'] = authHeader;
 
 import './styles/colors.css';
 
