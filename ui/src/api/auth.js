@@ -13,6 +13,11 @@ async function login (userData){
   return response.data;
 }
 
+async function logout() {
+  const url = '/api/accounts/logout/';
+  await axios.post(url);
+}
+
 function setAuthToken(token) {
   localStorage.setItem('jwtToken', token);
   const authHeader = 'Token ' + localStorage.getItem('jwtToken');
@@ -22,4 +27,5 @@ function setAuthToken(token) {
 export default{
   register,
   login,
+  logout,
 };

@@ -18,11 +18,25 @@
         </router-link>
       </div>
     </div>
+    <button
+      class="text-white"
+      @click="logout"
+    >
+      Logout
+    </button>
   </nav>
 </template>
 
 <script>
+import authAPI from '../api/auth';
+
 export default {
   name: 'Navbar',
+  methods: {
+    logout() {
+      authAPI.logout();
+      this.$router.push({ name: 'login' });
+    },
+  },
 };
 </script>
