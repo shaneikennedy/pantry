@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import App from './App.vue';
 import Home from './Home.vue';
 import Recipes from './Recipes.vue';
+import Login from './Login.vue';
 
 
 import axios from 'axios';
@@ -22,6 +23,12 @@ const routes = [
     path: '/recipes',
     component: Recipes,
     name: 'recipes',
+  },
+  {
+    path: '/login',
+    component: Login,
+    name: 'login',
+
   },
 ];
 
