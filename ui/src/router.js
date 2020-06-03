@@ -1,37 +1,48 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Home from './Home.vue';
-import Recipes from './Recipes.vue';
-import Login from './Login.vue';
-import store from './store';
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "./Home.vue";
+import Recipes from "./Recipes.vue";
+import Login from "./Login.vue";
+import store from "./store";
+
+const unauthenticatedRoutes = ["login", "home"];
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: Home,
-    name: 'home',
+    name: "home",
   },
   {
-    path: '/recipes',
+    path: "/recipes",
     component: Recipes,
-    name: 'recipes',
+    name: "recipes",
   },
   {
-    path: '/login',
+    path: "/login",
     component: Login,
-    name: 'login',
-
+    name: "login",
   },
 ];
 
 Vue.use(VueRouter);
 const router = new VueRouter({
   routes,
+  mode: "history",
 });
 
+function isTokenExpired(tokenExpiration) {
+  const today = new Date().toJSON();
+  return today > tokenExpiration;
+}
+
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'login' && to.name !== 'home' && !store.state.user) {
-    next({ name: 'login' });
+  const toRequiresAuth = !unauthenticatedRoutes.includes(to.name);
+  const user = store.state.user;
+  if (toRequiresAuth && !user) {
+    next({ path: "/login" });
+  } else if (user && isTokenExpired(user.expiry)) {
+    next({ path: "/login" });
   } else {
     next();
   }
