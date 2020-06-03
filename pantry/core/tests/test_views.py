@@ -131,9 +131,7 @@ class RecipesAPITests(APITestCase):
         recipe = {
             "name": "Pasta",
             "instructions": "Make pasta",
-            "ingredients": [
-                {"ingredient": i.id, "quantity": 5, "units": "G"},
-            ],
+            "ingredients": [{"ingredient": i.id, "quantity": 5, "units": "G"},],
         }
         url = reverse("recipes")
 
@@ -156,9 +154,7 @@ class RecipesAPITests(APITestCase):
         recipe = {
             "name": "",
             "instructions": "Make pasta",
-            "ingredients": [
-                {"ingredient": i.id, "quantity": 5, "units": "G"},
-            ],
+            "ingredients": [{"ingredient": i.id, "quantity": 5, "units": "G"},],
         }
         url = reverse("recipes")
 
@@ -167,7 +163,76 @@ class RecipesAPITests(APITestCase):
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        recipe_objects = Recipe.objects.filter(
-            name="", instructions="Make pasta"
-        )
+        recipe_objects = Recipe.objects.filter(name="", instructions="Make pasta")
         self.assertEqual(0, recipe_objects.count())
+
+
+class RecipeDetailAPITest(APITestCase):
+    def test_GET_UnAuthentication_Return401(self):
+        # Arrange
+        recipe = Recipe.objects.create(name="Grilled Cheese")
+        url = reverse("recipe-detail", args=[recipe.id])
+
+        # Act
+        response = self.client.get(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_GET_Authenticated_Return200(self):
+        # Arrange
+        user = User.objects.create_user(username="melissa")
+        recipe = Recipe.objects.create(name="Grilled Cheese")
+        url = reverse("recipe-detail", args=[recipe.id])
+        self.client.force_authenticate(user=user)
+
+        # Act
+        response = self.client.get(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_GET_RecipeDoesNotExist_Return404(self):
+        # Arrange
+        user = User.objects.create_user(username="melissa")
+        url = reverse("recipe-detail", args=[4])
+        self.client.force_authenticate(user=user)
+
+        # Act
+        response = self.client.get(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_GET_RecipeExists_ReturnRecipe(self):
+        # Arrange
+        recipe_name = "Pasta"
+        recipe_instructions = "Make the pasta"
+        ingredient1 = Ingredient.objects.create(name="tomato")
+        ingredient2 = Ingredient.objects.create(name="basil")
+        recipe = Recipe.objects.create(
+            name=recipe_name, instructions=recipe_instructions
+        )
+        RecipeIngredient.objects.create(
+            recipe=recipe, ingredient=ingredient1, quantity=300, units="G",
+        )
+        RecipeIngredient.objects.create(
+            recipe=recipe, ingredient=ingredient2, quantity=10, units="G",
+        )
+        user = User.objects.create_user(username="melissa")
+        url = reverse("recipe-detail", args=[recipe.id])
+        self.client.force_authenticate(user=user)
+
+        # Act
+        response = self.client.get(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Pasta")
+        self.assertEqual(response.data["instructions"], "Make the pasta")
+        self.assertEqual(response.data["ingredients"][0]["name"], "tomato")
+        self.assertEqual(response.data["ingredients"][0]["quantity"], 300)
+        self.assertEqual(response.data["ingredients"][0]["units"], "G")
+        self.assertEqual(response.data["ingredients"][1]["name"], "basil")
+        self.assertEqual(response.data["ingredients"][1]["quantity"], 10)
+        self.assertEqual(response.data["ingredients"][1]["units"], "G")
