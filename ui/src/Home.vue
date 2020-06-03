@@ -59,8 +59,6 @@
 </template>
 
 <script>
-import authAPI from './api/auth';
-
 export default {
   name:'Home',
   data() {
@@ -72,14 +70,17 @@ export default {
   },
   methods: {
     async register() {
-      const payload = {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      };
-      await authAPI.register(payload);
-      await authAPI.login(payload);
-      this.$router.push({ name: 'recipes' });
+      try {
+        const payload = {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        };
+        await this.$store.dispatch('registerUser', payload);
+        this.$router.push({ name: 'recipes' });
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
 };

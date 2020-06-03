@@ -19,6 +19,7 @@
       </div>
     </div>
     <button
+      v-show="user"
       class="text-white"
       @click="logout"
     >
@@ -28,14 +29,21 @@
 </template>
 
 <script>
-import authAPI from '../api/auth';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Navbar',
+  computed: {
+    ...mapState(['user']),
+  },
   methods: {
     logout() {
-      authAPI.logout();
-      this.$router.push({ name: 'login' });
+      try {
+        this.$store.dispatch('logoutUser');
+        this.$router.push({ name: 'login' });
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
 };

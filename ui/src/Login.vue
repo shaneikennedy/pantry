@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import authAPI from './api/auth';
-
 export default {
   name:'Login',
   data() {
@@ -54,12 +52,16 @@ export default {
   },
   methods: {
     async login() {
-      const payload = {
-        username: this.username,
-        password: this.password,
-      };
-      await authAPI.login(payload);
-      this.$router.push({ name: 'recipes' });
+      try {
+        const payload = {
+          username: this.username,
+          password: this.password,
+        };
+        await this.$store.dispatch('loginUser', payload);
+        this.$router.push({ name: 'recipes' });
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
 };
