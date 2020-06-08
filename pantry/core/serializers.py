@@ -4,23 +4,17 @@ from rest_framework import serializers
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Ingredient
-        fields = ('id', 'name')
+        fields = ("id", "name")
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-    name = serializers.StringRelatedField(source='ingredient', read_only=True)
+    name = serializers.StringRelatedField(source="ingredient", read_only=True)
 
     class Meta:
         model = RecipeIngredient
-        fields = (
-            'name',
-            'quantity',
-            'units',
-            'ingredient'
-        )
+        fields = ("name", "quantity", "units", "ingredient")
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -31,9 +25,10 @@ class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'name',
-            'instructions',
-            'ingredients',
+            "name",
+            "instructions",
+            "ingredients",
+            "id",
         )
 
     def create(self, validated_data):
