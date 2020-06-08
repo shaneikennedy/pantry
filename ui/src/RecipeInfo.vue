@@ -39,7 +39,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import recipeApi from './api/recipe';
+
 export default {
   name: "Recipe_info",
   data() {
@@ -58,8 +59,7 @@ export default {
   },
   async mounted() {
     const recipeId = this.$route.params.recipe_id;
-    const response = await axios.get(`/api/recipes/${recipeId}`);
-    this.recipe = response.data;
+    this.recipe = await recipeApi.getRecipeDetail(recipeId);
   },
 };
 </script>

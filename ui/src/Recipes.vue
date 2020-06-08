@@ -41,7 +41,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import recipeApi from './api/recipe';
+
 export default {
   name: "Recipes",
   data() {
@@ -52,8 +53,7 @@ export default {
     };
   },
   async mounted() {
-    const response = await axios.get("/api/recipes");
-    this.recipes = response.data;
+    this.recipes = await recipeApi.getRecipes();
   },
   methods: {
     goToDetailsPage(recipeId) {
