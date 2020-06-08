@@ -3,6 +3,7 @@ from .models import Ingredient, Recipe
 from rest_framework.views import APIView, Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
 
 class IngredientAPIView(APIView):
@@ -57,3 +58,15 @@ class RecipesAPIView(APIView):
 
 
 recipes_api = RecipesAPIView.as_view()
+
+
+class RecipeDetailAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, recipe_id):
+        recipe = get_object_or_404(Recipe, id=recipe_id)
+        serializer = RecipeSerializer(recipe)
+        return Response(data=serializer.data)
+
+
+recipe_detail_api = RecipeDetailAPIView.as_view()
