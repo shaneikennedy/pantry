@@ -11,29 +11,27 @@
       </span>
     </router-link>
     <div class="flex justify-center">
-      <div
-        v-for="recipe in recipes"
-        :key="recipe.id"
-        @click="goToDetailsPage(recipe.id)"
-        class="max-w-sm cursor-pointer rounded bg-white overflow-hidden shadow-lg hover:shadow-xl m-8 transform hover:-translate-y-1 hover:scale-103 transition duration-100 ease-in-out"
-      >
+      <div class="max-w-lg rounded bg-white overflow-hidden shadow-lg m-8">
         <img
           class="w-full"
           :src="recipeImageUrl"
           alt="Sunset in the mountains"
         />
-        <div class="px-6 py-4">
+        <div class="w-auto inline-block px-6 py-6">
           <div class="font-bold text-xl mb-2">{{ recipe.name }}</div>
           <p class="text-xl">Ingredients</p>
           <ul class="m-2">
-            <p
+            <div
               v-for="ingredient in recipe.ingredients"
               :key="ingredient.id"
-              class="text-gray-700 capitalize text-base"
+              class="flex text-gray-700 capitalize text-base"
             >
-              {{ ingredient.name }}
-            </p>
+              <p class="flex flex-1">{{ ingredient.quantity }}{{ unitsMap[ingredient.units] }}</p>
+              <p class="flex flex-auto">{{ ingredient.name }}</p>
+            </div>
           </ul>
+          <p class="text-xl py-4">Instructions</p>
+          <p>{{ recipe.instructions }}</p>
         </div>
       </div>
     </div>
@@ -43,25 +41,25 @@
 <script>
 import axios from "axios";
 export default {
-  name: "Recipes",
+  name: "Recipe_info",
   data() {
     return {
-      recipes: [],
+      recipe: [],
       recipeImageUrl:
         "http://www.howtodecorate.com/wp-content/uploads/2014/03/25_place_settings_spa.jpg",
+      unitsMap: {
+        "MG": "mg",
+        "G" :"g",
+        "KG": "kg",
+        "ML": "mL",
+        "L": "L",
+      },
     };
   },
   async mounted() {
-    const response = await axios.get("/api/recipes");
-    this.recipes = response.data;
-  },
-  methods: {
-    goToDetailsPage(recipeId) {
-      this.$router.push({
-        name: "recipe-info",
-        params: { recipe_id: recipeId },
-      });
-    },
+    const recipeId = this.$route.params.recipe_id;
+    const response = await axios.get(`/api/recipes/${recipeId}`);
+    this.recipe = response.data;
   },
 };
 </script>

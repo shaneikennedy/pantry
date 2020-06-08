@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "./Home.vue";
 import Recipes from "./Recipes.vue";
 import Login from "./Login.vue";
+import RecipeInfo from "./RecipeInfo.vue";
 import store from "./store";
 
 const unauthenticatedRoutes = ["login", "home"];
@@ -11,24 +12,29 @@ const routes = [
   {
     path: "/",
     component: Home,
-    name: "home",
+    name: "home"
   },
   {
     path: "/recipes",
     component: Recipes,
-    name: "recipes",
+    name: "recipes"
   },
   {
     path: "/login",
     component: Login,
-    name: "login",
+    name: "login"
   },
+  {
+    path: "/recipes/:recipe_id",
+    component: RecipeInfo,
+    name: "recipe-info"
+  }
 ];
 
 Vue.use(VueRouter);
 const router = new VueRouter({
   routes,
-  mode: "history",
+  mode: "history"
 });
 
 function isTokenExpired(tokenExpiration) {
