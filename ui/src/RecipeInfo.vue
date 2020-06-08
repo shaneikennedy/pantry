@@ -40,21 +40,18 @@
 
 <script>
 import recipeApi from './api/recipe';
+import {
+    defaultRecipeImageUrl,
+    ingredientsUnitMap,
+} from './utils';
 
 export default {
   name: "Recipe_info",
   data() {
     return {
       recipe: [],
-      recipeImageUrl:
-        "http://www.howtodecorate.com/wp-content/uploads/2014/03/25_place_settings_spa.jpg",
-      unitsMap: {
-        "MG": "mg",
-        "G" :"g",
-        "KG": "kg",
-        "ML": "mL",
-        "L": "L",
-      },
+      recipeImageUrl: defaultRecipeImageUrl,
+      unitsMap: ingredientsUnitMap,
     };
   },
   async mounted() {

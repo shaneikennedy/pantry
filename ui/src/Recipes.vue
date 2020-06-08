@@ -42,14 +42,14 @@
 
 <script>
 import recipeApi from './api/recipe';
+import { defaultRecipeImageUrl } from './utils';
 
 export default {
   name: "Recipes",
   data() {
     return {
       recipes: [],
-      recipeImageUrl:
-        "http://www.howtodecorate.com/wp-content/uploads/2014/03/25_place_settings_spa.jpg",
+      recipeImageUrl: defaultRecipeImageUrl,
     };
   },
   async mounted() {
