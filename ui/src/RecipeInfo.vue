@@ -26,12 +26,14 @@
               :key="ingredient.id"
               class="flex text-gray-700 capitalize text-base"
             >
-              <p class="flex flex-1">{{ ingredient.quantity }}{{ unitsMap[ingredient.units] }}</p>
-              <p class="flex flex-auto">{{ ingredient.name }}</p>
+              <p class="flex flex-1">
+                {{ ingredient.quantity }}{{ unitsMap[ingredient.units] }}
+              </p>
+              <p class="flex flex-auto px-2">{{ ingredient.name }}</p>
             </div>
           </ul>
           <p class="text-xl py-4">Instructions</p>
-          <p>{{ recipe.instructions }}</p>
+          <div v-html="recipe.instructions"></div>
         </div>
       </div>
     </div>
@@ -39,11 +41,8 @@
 </template>
 
 <script>
-import recipeApi from './api/recipe';
-import {
-    defaultRecipeImageUrl,
-    ingredientsUnitMap,
-} from './utils';
+import recipeApi from "./api/recipe";
+import { defaultRecipeImageUrl, ingredientsUnitMap } from "./utils";
 
 export default {
   name: "Recipe_info",
@@ -51,12 +50,12 @@ export default {
     return {
       recipe: [],
       recipeImageUrl: defaultRecipeImageUrl,
-      unitsMap: ingredientsUnitMap,
+      unitsMap: ingredientsUnitMap
     };
   },
   async mounted() {
     const recipeId = this.$route.params.recipe_id;
     this.recipe = await recipeApi.getRecipeDetail(recipeId);
-  },
+  }
 };
 </script>

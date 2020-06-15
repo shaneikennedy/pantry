@@ -4,6 +4,7 @@ import Home from "./Home.vue";
 import Recipes from "./Recipes.vue";
 import Login from "./Login.vue";
 import RecipeInfo from "./RecipeInfo.vue";
+import RecipeCreate from "./RecipeCreate.vue";
 import store from "./store";
 
 const unauthenticatedRoutes = ["login", "home"];
@@ -28,6 +29,11 @@ const routes = [
     path: "/recipes/:recipe_id",
     component: RecipeInfo,
     name: "recipe-info"
+  },
+  {
+    path: "/recipes/create",
+    component: RecipeCreate,
+    name: "recipe-create",
   }
 ];
 
