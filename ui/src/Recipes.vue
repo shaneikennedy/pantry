@@ -10,12 +10,12 @@
         <i class="material-icons md-8">add</i>
       </span>
     </router-link>
-    <div class="flex justify-center">
+    <div class="flex flex-wrap justify-center">
       <div
         v-for="recipe in recipes"
         :key="recipe.id"
         @click="goToDetailsPage(recipe.id)"
-        class="max-w-sm cursor-pointer rounded bg-white overflow-hidden shadow-lg hover:shadow-xl m-8 transform hover:-translate-y-1 hover:scale-103 transition duration-100 ease-in-out"
+        class="max-w-xs cursor-pointer rounded bg-white overflow-hidden shadow-lg hover:shadow-xl m-8 transform hover:-translate-y-1 hover:scale-103 transition duration-100 ease-in-out "
       >
         <img
           class="w-full"
@@ -41,15 +41,15 @@
 </template>
 
 <script>
-import recipeApi from './api/recipe';
-import { defaultRecipeImageUrl } from './utils';
+import recipeApi from "./api/recipe";
+import { defaultRecipeImageUrl } from "./utils";
 
 export default {
   name: "Recipes",
   data() {
     return {
       recipes: [],
-      recipeImageUrl: defaultRecipeImageUrl,
+      recipeImageUrl: defaultRecipeImageUrl
     };
   },
   async mounted() {
@@ -59,9 +59,9 @@ export default {
     goToDetailsPage(recipeId) {
       this.$router.push({
         name: "recipe-info",
-        params: { recipe_id: recipeId },
+        params: { recipe_id: recipeId }
       });
-    },
-  },
+    }
+  }
 };
 </script>

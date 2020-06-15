@@ -12,7 +12,11 @@
     </router-link>
     <div class="flex justify-center">
       <div class="max-w-lg rounded bg-white overflow-hidden shadow-lg m-8">
-        <img class="w-full" :src="recipeImageUrl" alt="Sunset in the mountains" />
+        <img
+          class="w-full"
+          :src="recipeImageUrl"
+          alt="Sunset in the mountains"
+        />
         <div class="w-auto inline-block px-6 py-6">
           <div class="font-bold text-xl mb-2">{{ recipe.name }}</div>
           <p class="text-xl">Ingredients</p>
@@ -22,8 +26,10 @@
               :key="ingredient.id"
               class="flex text-gray-700 capitalize text-base"
             >
-              <p class="flex flex-1">{{ ingredient.quantity }}{{ unitsMap[ingredient.units] }}</p>
-              <p class="flex flex-auto">{{ ingredient.name }}</p>
+              <p class="flex flex-1">
+                {{ ingredient.quantity }}{{ unitsMap[ingredient.units] }}
+              </p>
+              <p class="flex flex-auto px-2">{{ ingredient.name }}</p>
             </div>
           </ul>
           <p class="text-xl py-4">Instructions</p>
