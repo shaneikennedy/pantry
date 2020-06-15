@@ -132,21 +132,21 @@ import "vue-select/dist/vue-select.css";
 
 import vSelect from "vue-select";
 import { quillEditor } from "vue-quill-editor";
-import axios from "axios";
 import recipeAPI from "./api/recipe";
 import { ingredientsUnitMap } from "./utils";
+import ingredientAPI from "./api/ingredients";
 
 const emptyNewIngredient = {
   quantity: null,
   units: null,
-  ingredient: null,
+  ingredient: null
 };
 
 export default {
   name: "RecipeCreate",
   components: {
     quillEditor,
-    vSelect,
+    vSelect
   },
   data() {
     return {
@@ -159,26 +159,25 @@ export default {
             [{ list: "ordered" }, { list: "bullet" }],
             [{ header: [1, 2, 3, 4, 5, 6, false] }],
             [{ align: [] }],
-            ["clean"],
-          ],
-        },
+            ["clean"]
+          ]
+        }
       },
       unitsMap: ingredientsUnitMap,
       ingredients: [],
       newRecipeIngredient: {
         quantity: null,
         units: null,
-        ingredient: null,
+        ingredient: null
       },
       name: null,
       instructions: null,
       recipeIngredients: [],
-      selectUnits: ["MG", "ML", "G", "KG", "L"],
+      selectUnits: ["MG", "ML", "G", "KG", "L"]
     };
   },
   async mounted() {
-    const response = await axios.get("/api/ingredients");
-    this.ingredients = response.data;
+    this.ingredients = await ingredientAPI.getIngredients();
   },
   methods: {
     addIngredient() {
@@ -187,7 +186,7 @@ export default {
     },
     removeRecipeIngredient(ingredientId) {
       this.recipeIngredients = this.recipeIngredients.filter(
-        (ing) => ing.ingredient.id !== ingredientId
+        ing => ing.ingredient.id !== ingredientId
       );
     },
     async addRecipe() {
@@ -195,18 +194,18 @@ export default {
         const payload = {
           name: this.name,
           instructions: this.instructions,
-          ingredients: this.recipeIngredients.map((val) => ({
+          ingredients: this.recipeIngredients.map(val => ({
             quantity: val.quantity,
             units: val.units,
-            ingredient: val.ingredient.id,
-          })),
+            ingredient: val.ingredient.id
+          }))
         };
         await recipeAPI.addRecipe(payload);
         this.$router.push({ name: "recipes" });
       } catch (err) {
         console.log(err);
       }
-    },
-  },
+    }
+  }
 };
 </script>
