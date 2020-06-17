@@ -3,7 +3,7 @@
     class="flex items-center justify-between flex-wrap pantry-bg-red p-4 max-h-full"
   >
     <div class="flex items-center flex-shrink-0 text-white mr-6">
-      <img src="./logo.svg" style="width:100px;height:50px;" />
+      <img src="./logo.svg" style="width:100px;height:50px;" @click="home" />
     </div>
     <div class="block lg:hidden">
       <button
@@ -32,6 +32,13 @@
     <button v-show="user" class="text-white" @click="logout">
       Logout
     </button>
+    <button
+      v-show="!user && this.$route.name === 'home'"
+      class="text-white"
+      @click="login"
+    >
+      Login
+    </button>
   </nav>
 </template>
 
@@ -45,6 +52,12 @@ export default {
   },
 
   methods: {
+    login() {
+      this.$router.push({ name: "login" });
+    },
+    home() {
+      this.$router.push({ name: "home" });
+    },
     logout() {
       try {
         this.$store.dispatch("logoutUser");
