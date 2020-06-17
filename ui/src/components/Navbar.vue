@@ -1,10 +1,8 @@
 <template>
   <nav
-    class="flex items-center justify-between flex-wrap pantry-bg-red p-4 max-h-full"
+    class="flex items-center justify-between items-center flex-wrap pantry-bg-red p-4 max-h-full"
   >
-    <div class="flex items-center flex-shrink-0 text-white mr-6">
-      <img src="./logo.svg" style="width:100px;height:50px;" />
-    </div>
+    <img :src="logoUrl" class="w-20 h-10 mr-6 cursor-pointer" @click="home" />
     <div class="block lg:hidden">
       <button
         class="flex items-center px-3 py-2 border rounded border-teal-400 hover:text-white hover:border-white"
@@ -20,10 +18,11 @@
       </button>
     </div>
     <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-      <div class="text-sm lg:flex-grow">
+      <div class="lg:flex-grow">
         <router-link
           :to="{ name: 'recipes' }"
           class="block mt-4 lg:inline-block text-white lg:mt-0 hover:text-white mr-4"
+          tag="button"
         >
           Recipes
         </router-link>
@@ -32,23 +31,42 @@
     <button v-show="user" class="text-white" @click="logout">
       Logout
     </button>
+    <router-link
+      v-show="isLoggedOut"
+      class="text-white"
+      tag="button"
+      :to="{ name: 'login'}"
+    >
+      Login
+    </router-link>
   </nav>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import LogoUrl from "../assets/logo.svg";
 
 export default {
   name: "Navbar",
   computed: {
-    ...mapState(["user"])
+    ...mapState(["user"]),
+    isLoggedOut() {
+      return !this.user && this.$route.name === 'home'
+    },
   },
-
+  data() {
+    return {
+      logoUrl: LogoUrl,
+    };
+  },
   methods: {
+    home() {
+      this.$router.push({ name: "home" });
+    },
     logout() {
       try {
         this.$store.dispatch("logoutUser");
-        this.$router.push({ name: "login" });
+        this.$router.push({ name: "home" });
       } catch (err) {
         console.error(err);
       }
