@@ -1,11 +1,16 @@
 .pantry-bg-red {
-  background-color: #a43125;
+  background-color: #a1352d;
 }
 
 .pantry-bg-brown {
   background-color: #603022;
 }
-
+.pantry-text-brown {
+  color: #603022;
+}
+.pantry-bg-yellow {
+  background-color: #fbd54a;
+}
 html,
 body {
   width: 100%;

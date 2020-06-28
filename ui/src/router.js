@@ -2,12 +2,13 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "./Home.vue";
 import Recipes from "./Recipes.vue";
+import Register from "./Register.vue";
 import Login from "./Login.vue";
 import RecipeInfo from "./RecipeInfo.vue";
 import RecipeCreate from "./RecipeCreate.vue";
 import store from "./store";
 
-const unauthenticatedRoutes = ["login", "home"];
+const unauthenticatedRoutes = ["login", "home", "register"];
 
 const routes = [
   {
@@ -33,7 +34,12 @@ const routes = [
   {
     path: "/recipes/create",
     component: RecipeCreate,
-    name: "recipe-create",
+    name: "recipe-create"
+  },
+  {
+    path: "/register",
+    component: Register,
+    name: "register"
   }
 ];
 
