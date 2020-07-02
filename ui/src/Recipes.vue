@@ -3,7 +3,7 @@
     <router-link
       :to="{ name: 'recipe-create' }"
       tag="button"
-      class="absolute bottom-0 right-0 pantry-bg-brown cursor-pointer text-white p-2 m-2 border border-gray-400 shadow rounded-full h-16 w-16"
+      class="absolute bottom-0 right-0 pantry-bg-brown z-40 cursor-pointer text-white p-2 m-2 border border-gray-400 shadow rounded-full h-16 w-16"
     >
       <span class="flex items-start">
         <i class="material-icons md-24">restaurant</i>
