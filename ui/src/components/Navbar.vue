@@ -28,6 +28,14 @@
         </router-link>
       </div>
     </div>
+    <router-link
+      v-show="user"
+      :to="{ name: 'profile' }"
+      class="block mt-4 lg:inline-block text-white lg:mt-0 hover:text-white mr-4"
+      tag="button"
+    >
+      Profile
+    </router-link>
     <button v-show="user" class="text-white" @click="logout">
       Logout
     </button>
@@ -35,7 +43,7 @@
       v-show="isLoggedOut"
       class="text-white"
       tag="button"
-      :to="{ name: 'login'}"
+      :to="{ name: 'login' }"
     >
       Login
     </router-link>
@@ -51,14 +59,15 @@ export default {
   computed: {
     ...mapState(["user"]),
     isLoggedOut() {
-      return !this.user && this.$route.name === 'home'
-    },
+      return !this.user && this.$route.name === "home";
+    }
   },
   data() {
     return {
-      logoUrl: LogoUrl,
+      logoUrl: LogoUrl
     };
   },
+
   methods: {
     home() {
       this.$router.push({ name: "home" });
