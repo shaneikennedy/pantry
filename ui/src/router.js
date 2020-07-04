@@ -15,37 +15,58 @@ const routes = [
   {
     path: "/",
     component: Home,
-    name: "home"
+    name: "home",
+    meta: {
+      title: "Pantry | Home",
+    }
   },
   {
     path: "/recipes",
     component: Recipes,
-    name: "recipes"
+    name: "recipes",
+    meta: {
+      title: "Pantry | Recipes",
+    }
   },
   {
     path: "/login",
     component: Login,
-    name: "login"
+    name: "login",
+    meta: {
+      title: "Pantry | Login",
+    }
   },
   {
     path: "/recipes/:recipe_id",
     component: RecipeInfo,
-    name: "recipe-info"
+    name: "recipe-info",
+    meta: {
+      title: "Pantry | Recipe",
+    }
   },
   {
     path: "/recipes/create",
     component: RecipeCreate,
-    name: "recipe-create"
+    name: "recipe-create",
+    meta: {
+      title: "Pantry | Create recipe",
+    }
   },
   {
     path: "/register",
     component: Register,
-    name: "register"
+    name: "register",
+    meta: {
+      title: "Pantry | Register",
+    }
   },
   {
     path: "/profile",
     component: Profile,
-    name: "profile"
+    name: "profile",
+    meta: {
+      title: "Pantry | Profile",
+    }
   }
 ];
 
@@ -70,6 +91,10 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+});
+
+router.afterEach((to) => {
+  document.title = to.meta.title;
 });
 
 export default router;
