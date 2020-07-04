@@ -1,18 +1,22 @@
-import Vue from 'vue';
-import App from './App.vue';
-import store from './store';
-import router from './router';
+import Vue from "vue";
+import axios from "axios";
 
-import axios from 'axios';
-const authHeader = 'Token ' + localStorage.getItem('jwtToken');
-axios.defaults.headers.common['Authorization'] = authHeader;
+import App from "./App.vue";
+import store from "./store";
+import router from "./router";
 
-import './styles/colors.css';
+const tokenData = JSON.parse(localStorage.getItem("jwtToken"));
+if (tokenData) {
+  axios.defaults.headers.common["Authorization"] = `Token ${tokenData.token}`;
+  store.commit("setUser", tokenData);
+}
+
+import "./styles/colors.css";
 
 Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
-  render: h => h(App),
-}).$mount('#app');
+  render: (h) => h(App),
+}).$mount("#app");
