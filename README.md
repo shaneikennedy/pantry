@@ -27,6 +27,13 @@ make backend
 
 The django backend should now be running on port 8000.
 
+After this we need to run migrations and fill the database with some data to actually use the app:
+
+``` shell
+python manage.py migrate
+make bootstrap
+```
+
 ## Running the frontend
 
 ``` shell
