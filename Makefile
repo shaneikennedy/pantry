@@ -15,3 +15,6 @@ install:
 
 install-ui:
 		cd ui && npm i
+
+bootstrap:
+		python manage.py bootstrap
