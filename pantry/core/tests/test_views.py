@@ -232,6 +232,7 @@ class RecipeDetailAPITest(APITestCase):
         # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Pasta")
+        self.assertEqual(response.data["author_username"], "melissa")
         self.assertEqual(response.data["instructions"], "Make the pasta")
         self.assertEqual(response.data["ingredients"][0]["name"], "tomato")
         self.assertEqual(response.data["ingredients"][0]["quantity"], 300)
