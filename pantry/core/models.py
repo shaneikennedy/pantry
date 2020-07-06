@@ -16,7 +16,7 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
-    author = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     instructions = models.TextField(blank=True, default="")
     ingredients = models.ManyToManyField(
