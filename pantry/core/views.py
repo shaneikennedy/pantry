@@ -46,6 +46,7 @@ class RecipesAPIView(APIView):
 
     def post(self, request):
         recipe = request.data
+        recipe['author'] = request.user.id
         serializer = RecipeSerializer(data=recipe)
 
         if serializer.is_valid():

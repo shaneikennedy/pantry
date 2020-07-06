@@ -21,11 +21,16 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
         source="recipeingredient_set", many=True,
     )
+    author_username = serializers.CharField(
+        read_only=True, source='author.username'
+    )
 
     class Meta:
         model = Recipe
         fields = (
             "name",
+            "author",
+            "author_username",
             "instructions",
             "ingredients",
             "id",

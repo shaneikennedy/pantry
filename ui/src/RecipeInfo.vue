@@ -18,7 +18,10 @@
           alt="Sunset in the mountains"
         />
         <div class="w-auto inline-block px-6 py-6">
-          <div class="font-bold text-xl mb-2">{{ recipe.name }}</div>
+          <div class="mb-2">
+            <p class="font-bold text-xl">{{ recipe.name }}</p>
+            <em class="text-md">By {{ recipe.author_username }}</em>
+          </div>
           <p class="text-xl">Ingredients</p>
           <ul class="m-2">
             <div

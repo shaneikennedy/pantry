@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from ..models import Ingredient
 from ..serializers import RecipeSerializer
 
@@ -7,9 +8,11 @@ class RecipeIngredientSerializerTests(TestCase):
 
     def test_Create_ValidData_ShowuldPerformCreate(self):
         # Arrange
+        user = User.objects.create_user(username="melissa")
         i = Ingredient.objects.create(name="cheese")
         recipe = {
             "name": "Pasta",
+            "author": user.id,
             "instructions": "Make pasta",
             "ingredients": [
                 {"ingredient": i.id, "quantity": 5, "units": "G"},

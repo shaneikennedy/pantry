@@ -1,5 +1,7 @@
 from django.db import models
 
+from django.contrib.auth.models import User
+
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -14,11 +16,11 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     instructions = models.TextField(blank=True, default="")
     ingredients = models.ManyToManyField(
-        Ingredient,
-        through="RecipeIngredient"
+        Ingredient, through="RecipeIngredient"
     )
 
     objects = models.Manager()
