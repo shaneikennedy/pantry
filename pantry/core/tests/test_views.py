@@ -96,12 +96,13 @@ class RecipesAPITests(APITestCase):
 
     def test_GET__ReturnAllRecipes(self):
         # Arrange
+        user = User.objects.create_user(username="melissa")
         recipe_name = "Pasta"
         recipe_instructions = "Make the pasta"
         ingredient1 = Ingredient.objects.create(name="tomato")
         ingredient2 = Ingredient.objects.create(name="basil")
         recipe = Recipe.objects.create(
-            name=recipe_name, instructions=recipe_instructions
+            name=recipe_name, instructions=recipe_instructions, author=user
         )
         RecipeIngredient.objects.create(
             recipe=recipe, ingredient=ingredient1, quantity=300, units="G",
@@ -171,7 +172,8 @@ class RecipesAPITests(APITestCase):
 class RecipeDetailAPITest(APITestCase):
     def test_GET_UnAuthentication_Return401(self):
         # Arrange
-        recipe = Recipe.objects.create(name="Grilled Cheese")
+        user = User.objects.create_user(username="melissa")
+        recipe = Recipe.objects.create(name="Grilled Cheese", author=user)
         url = reverse("recipe-detail", args=[recipe.id])
 
         # Act
@@ -183,7 +185,7 @@ class RecipeDetailAPITest(APITestCase):
     def test_GET_Authenticated_Return200(self):
         # Arrange
         user = User.objects.create_user(username="melissa")
-        recipe = Recipe.objects.create(name="Grilled Cheese")
+        recipe = Recipe.objects.create(name="Grilled Cheese", author=user)
         url = reverse("recipe-detail", args=[recipe.id])
         self.client.force_authenticate(user=user)
 
@@ -207,12 +209,13 @@ class RecipeDetailAPITest(APITestCase):
 
     def test_GET_RecipeExists_ReturnRecipe(self):
         # Arrange
+        user = User.objects.create_user(username="melissa")
         recipe_name = "Pasta"
         recipe_instructions = "Make the pasta"
         ingredient1 = Ingredient.objects.create(name="tomato")
         ingredient2 = Ingredient.objects.create(name="basil")
         recipe = Recipe.objects.create(
-            name=recipe_name, instructions=recipe_instructions
+            name=recipe_name, instructions=recipe_instructions, author=user
         )
         RecipeIngredient.objects.create(
             recipe=recipe, ingredient=ingredient1, quantity=300, units="G",
@@ -220,7 +223,6 @@ class RecipeDetailAPITest(APITestCase):
         RecipeIngredient.objects.create(
             recipe=recipe, ingredient=ingredient2, quantity=10, units="G",
         )
-        user = User.objects.create_user(username="melissa")
         url = reverse("recipe-detail", args=[recipe.id])
         self.client.force_authenticate(user=user)
 
