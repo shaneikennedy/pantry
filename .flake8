@@ -8,3 +8,4 @@ exclude =
     pantry/*/migrations/*,
     # ignore config
     pantry/settings.py,
+max-line-length = 89
