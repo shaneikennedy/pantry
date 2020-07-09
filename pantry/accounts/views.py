@@ -1,4 +1,4 @@
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserProfileSerializer
 from django.contrib.auth import login
 from rest_framework.views import APIView, Response
 from rest_framework import status, permissions
@@ -44,7 +44,7 @@ class UserAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
+        serializer = UserProfileSerializer(request.user)
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
