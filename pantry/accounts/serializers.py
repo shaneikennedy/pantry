@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from pantry.core.serializers import RecipeSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -18,3 +19,11 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data["password"],
         )
         return user
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    recipes = RecipeSerializer(many=True, source="recipe_set.all")
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "date_joined", "recipes")

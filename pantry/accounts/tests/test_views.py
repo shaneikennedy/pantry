@@ -2,6 +2,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 from django.urls import reverse
+from pantry.core.models import Ingredient, Recipe, RecipeIngredient
 
 
 class RegisterAPITests(APITestCase):
@@ -94,6 +95,19 @@ class UserAPITests(APITestCase):
         user = User.objects.create_user(
             email="test@123.com", username="test123", password="123456",
         )
+        recipe_name = "Pasta"
+        recipe_instructions = "Make the pasta"
+        ingredient1 = Ingredient.objects.create(name="tomato")
+        ingredient2 = Ingredient.objects.create(name="basil")
+        recipe = Recipe.objects.create(
+            name=recipe_name, instructions=recipe_instructions, author=user
+        )
+        RecipeIngredient.objects.create(
+            recipe=recipe, ingredient=ingredient1, quantity=300, units="G",
+        )
+        RecipeIngredient.objects.create(
+            recipe=recipe, ingredient=ingredient2, quantity=10, units="G",
+        )
         self.client.force_authenticate(user=user)
 
         # Act
@@ -103,3 +117,6 @@ class UserAPITests(APITestCase):
         self.assertEqual(response.data["username"], "test123")
         self.assertEqual(response.data["email"], "test@123.com")
         self.assertIsNotNone(response.data["date_joined"])
+        self.assertEqual(len(response.data["recipes"]), 1)
+        self.assertEqual(response.data["recipes"][0]["name"], recipe_name)
+        self.assertEqual(response.data["recipes"][0]["author"], user.id)
