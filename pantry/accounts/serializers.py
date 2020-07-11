@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from pantry.core.serializers import RecipeSerializer
+from .models import RecipeLike
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -27,3 +28,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("username", "email", "date_joined", "recipes")
+
+
+class RecipeLikesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeLike
+        fields = ("user", "recipe")

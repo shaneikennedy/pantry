@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from pantry.core.models import Ingredient, Recipe, RecipeIngredient
+from pantry.accounts.models import RecipeLike
 
 
 class RegisterAPITests(APITestCase):
@@ -120,3 +121,57 @@ class UserAPITests(APITestCase):
         self.assertEqual(len(response.data["recipes"]), 1)
         self.assertEqual(response.data["recipes"][0]["name"], recipe_name)
         self.assertEqual(response.data["recipes"][0]["author"], user.id)
+
+
+class UserLikesAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.url = reverse("likes")
+        cls.user = User.objects.create_user(
+            email="test@123.com", username="test123", password="123456",
+        )
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
+    def test_POST_Unauthenticated_Return401(self):
+        # Act
+        self.client.logout()
+        response = self.client.post(self.url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_POST_ValidData_RecipeLikeCreated(self):
+        # Arrange
+        recipe = Recipe.objects.create(
+            name="omlette", instructions="make", author=self.user
+        )
+
+        # Act
+        response = self.client.post(self.url, {"recipe": recipe.id})
+
+        # Assert
+        recipe_likes = RecipeLike.objects.filter(user=self.user, recipe=recipe)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(1, len(recipe_likes))
+
+    def test_POST_NonExistentRecipe_Return400(self):
+        # Act
+        response = self.client.post(self.url, {"recipe": 200})
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_POST_RecipeLikeAlreadyExists_Return400(self):
+        # Arrange
+        recipe = Recipe.objects.create(
+            name="omlette", instructions="make", author=self.user
+        )
+        RecipeLike.objects.create(user=self.user, recipe=recipe)
+
+        # Act
+        response = self.client.post(self.url, {"recipe": recipe.id})
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

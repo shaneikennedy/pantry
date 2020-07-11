@@ -1,4 +1,4 @@
-from .serializers import UserSerializer, UserProfileSerializer
+from .serializers import UserSerializer, UserProfileSerializer, RecipeLikesSerializer
 from django.contrib.auth import login
 from rest_framework.views import APIView, Response
 from rest_framework import status, permissions
@@ -50,3 +50,19 @@ class UserAPIView(APIView):
 
 
 user_api = UserAPIView.as_view()
+
+
+class UserLikesAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        recipe_like = request.data
+        recipe_like["user"] = request.user.id
+        serializer = RecipeLikesSerializer(data=recipe_like)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+
+
+user_likes_api = UserLikesAPIView.as_view()
