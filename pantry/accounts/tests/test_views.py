@@ -175,3 +175,66 @@ class UserLikesAPITest(APITestCase):
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class UserLikesDetailAPITests(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            email="test@123.com", username="test123", password="123456",
+        )
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
+    def test_DELETE_Unauthenticated_Return401(self):
+        # Act
+        url = reverse("likes-detail", args=[200])
+        self.client.logout()
+        response = self.client.post(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_DELETE_UserLikeExists_ShouldDelete(self):
+        # Arrange
+        recipe = Recipe.objects.create(
+            name="omlette", instructions="make", author=self.user
+        )
+        like = RecipeLike.objects.create(user=self.user, recipe=recipe)
+
+        url = reverse("likes-detail", args=[like.id])
+        # Act
+        response = self.client.delete(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_DELETE_RecipeLikeDNE_Return404(self):
+        # Arrange
+        url = reverse("likes-detail", args=[200])
+
+        # Act
+        response = self.client.delete(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_DELETE_RecipeLikeForOtherUser_DoesNotDeleteLike(self):
+        # Arrange
+        other_user = User.objects.create_user(
+            email="test@abc.com", username="abc123", password="123456",
+        )
+        recipe = Recipe.objects.create(
+            name="omlette", instructions="make", author=self.user
+        )
+        like = RecipeLike.objects.create(user=self.user, recipe=recipe)
+
+        url = reverse("likes-detail", args=[like.id])
+        self.client.force_authenticate(user=other_user)
+
+        # Act
+        response = self.client.delete(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

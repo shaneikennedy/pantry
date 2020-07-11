@@ -1,4 +1,10 @@
-from .serializers import UserSerializer, UserProfileSerializer, RecipeLikesSerializer
+from .serializers import (
+    UserSerializer,
+    UserProfileSerializer,
+    RecipeLikesSerializer,
+)
+from .models import RecipeLike
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from rest_framework.views import APIView, Response
 from rest_framework import status, permissions
@@ -17,9 +23,13 @@ class RegisterAPIView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+            return Response(
+                data=serializer.data, status=status.HTTP_201_CREATED
+            )
 
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data=serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 register_api = RegisterAPIView.as_view()
@@ -62,7 +72,23 @@ class UserLikesAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+        return Response(
+            status=status.HTTP_400_BAD_REQUEST, data=serializer.errors
+        )
 
 
 user_likes_api = UserLikesAPIView.as_view()
+
+
+class UserLikesDetailAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request, recipe_like_id):
+        recipe_like = get_object_or_404(
+            RecipeLike, user=request.user, id=recipe_like_id
+        )
+        recipe_like.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+user_likes_detail_api = UserLikesDetailAPIView.as_view()
