@@ -12,11 +12,7 @@
     </router-link>
     <div class="flex justify-center">
       <div class="max-w-lg rounded bg-white overflow-hidden shadow-lg m-8">
-        <img
-          class="w-full"
-          :src="recipeImageUrl"
-          alt="Sunset in the mountains"
-        />
+        <img class="w-full" :src="recipeImageUrl" alt="Sunset in the mountains" />
         <div class="w-auto inline-block px-6 py-6">
           <div class="mb-2">
             <p class="font-bold text-xl">{{ recipe.name }}</p>
@@ -29,14 +25,15 @@
               :key="ingredient.id"
               class="flex text-gray-700 capitalize text-base"
             >
-              <p class="flex flex-1">
-                {{ ingredient.quantity }}{{ unitsMap[ingredient.units] }}
-              </p>
+              <p class="flex flex-1">{{ ingredient.quantity }}{{ unitsMap[ingredient.units] }}</p>
               <p class="flex flex-auto px-2">{{ ingredient.name }}</p>
             </div>
           </ul>
           <p class="text-xl py-4">Instructions</p>
           <div v-html="recipe.instructions"></div>
+        </div>
+        <div class="h-16 w-16 mr-0 mx-auto">
+          <i class="cursor-pointer material-icons md-24" @click="likeRecipe">favorite_border</i>
         </div>
       </div>
     </div>
@@ -45,6 +42,7 @@
 
 <script>
 import recipeApi from "./api/recipe";
+import recipeLikesApi from "./api/recipeLikes";
 import { defaultRecipeImageUrl, ingredientsUnitMap } from "./utils";
 
 export default {
@@ -59,6 +57,14 @@ export default {
   async mounted() {
     const recipeId = this.$route.params.recipe_id;
     this.recipe = await recipeApi.getRecipeDetail(recipeId);
+  },
+  methods: {
+    async likeRecipe() {
+      const payload = {
+        recipe: this.recipe.id
+      };
+      await recipeLikesApi.likeRecipe(payload);
+    }
   }
 };
 </script>

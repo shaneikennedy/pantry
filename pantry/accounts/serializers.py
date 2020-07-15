@@ -27,7 +27,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", "email", "date_joined", "recipes")
+        fields = ("username", "email", "date_joined", "recipes", "id")
 
 
 class RecipeLikesSerializer(serializers.ModelSerializer):
