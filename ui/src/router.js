@@ -84,6 +84,10 @@ function isTokenExpired(tokenExpiration) {
 router.beforeEach((to, from, next) => {
   const toRequiresAuth = !unauthenticatedRoutes.includes(to.name);
   const user = store.state.user;
+  if (toRequiresAuth) {
+    store.dispatch("fetchUserProfile");
+  }
+
   if (toRequiresAuth && !user) {
     next({ path: "/login" });
   } else if (user && isTokenExpired(user.expiry)) {
