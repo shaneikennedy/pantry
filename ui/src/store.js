@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import authAPI from './api/auth';
 import userAPI from './api/user';
+import recipeAPI from "./api/recipe";
 
 Vue.use(Vuex);
 
@@ -37,6 +38,10 @@ const store = new Vuex.Store({
     async fetchUserProfile(context) {
       const profile = await userAPI.getUser();
       context.commit("setProfile", profile);
+    },
+    async createRecipe(context, payload) {
+      await recipeAPI.addRecipe(payload);
+      context.dispatch("fetchUserProfile");
     },
   }
 });
