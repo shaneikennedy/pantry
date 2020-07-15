@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from pantry.core.models import Ingredient, Recipe, RecipeIngredient
+from pantry.accounts.models import RecipeLike
 
 
 class RegisterAPITests(APITestCase):
@@ -108,6 +109,7 @@ class UserAPITests(APITestCase):
         RecipeIngredient.objects.create(
             recipe=recipe, ingredient=ingredient2, quantity=10, units="G",
         )
+        like = RecipeLike.objects.create(recipe=recipe, user=user)
         self.client.force_authenticate(user=user)
 
         # Act
@@ -120,3 +122,123 @@ class UserAPITests(APITestCase):
         self.assertEqual(len(response.data["recipes"]), 1)
         self.assertEqual(response.data["recipes"][0]["name"], recipe_name)
         self.assertEqual(response.data["recipes"][0]["author"], user.id)
+        self.assertEqual(len(response.data["likes"]), 1)
+        self.assertEqual(response.data["likes"][0]["id"], like.id)
+
+
+
+class UserLikesAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.url = reverse("likes")
+        cls.user = User.objects.create_user(
+            email="test@123.com", username="test123", password="123456",
+        )
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
+    def test_POST_Unauthenticated_Return401(self):
+        # Act
+        self.client.logout()
+        response = self.client.post(self.url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_POST_ValidData_RecipeLikeCreated(self):
+        # Arrange
+        recipe = Recipe.objects.create(
+            name="omlette", instructions="make", author=self.user
+        )
+
+        # Act
+        response = self.client.post(self.url, {"recipe": recipe.id})
+
+        # Assert
+        recipe_likes = RecipeLike.objects.filter(user=self.user, recipe=recipe)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(1, len(recipe_likes))
+
+    def test_POST_NonExistentRecipe_Return400(self):
+        # Act
+        response = self.client.post(self.url, {"recipe": 200})
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_POST_RecipeLikeAlreadyExists_Return400(self):
+        # Arrange
+        recipe = Recipe.objects.create(
+            name="omlette", instructions="make", author=self.user
+        )
+        RecipeLike.objects.create(user=self.user, recipe=recipe)
+
+        # Act
+        response = self.client.post(self.url, {"recipe": recipe.id})
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class UserLikesDetailAPITests(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            email="test@123.com", username="test123", password="123456",
+        )
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
+    def test_DELETE_Unauthenticated_Return401(self):
+        # Act
+        url = reverse("likes-detail", args=[200])
+        self.client.logout()
+        response = self.client.post(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_DELETE_UserLikeExists_ShouldDelete(self):
+        # Arrange
+        recipe = Recipe.objects.create(
+            name="omlette", instructions="make", author=self.user
+        )
+        like = RecipeLike.objects.create(user=self.user, recipe=recipe)
+
+        url = reverse("likes-detail", args=[like.id])
+        # Act
+        response = self.client.delete(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_DELETE_RecipeLikeDNE_Return404(self):
+        # Arrange
+        url = reverse("likes-detail", args=[200])
+
+        # Act
+        response = self.client.delete(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_DELETE_RecipeLikeForOtherUser_DoesNotDeleteLike(self):
+        # Arrange
+        other_user = User.objects.create_user(
+            email="test@abc.com", username="abc123", password="123456",
+        )
+        recipe = Recipe.objects.create(
+            name="omlette", instructions="make", author=self.user
+        )
+        like = RecipeLike.objects.create(user=self.user, recipe=recipe)
+
+        url = reverse("likes-detail", args=[like.id])
+        self.client.force_authenticate(user=other_user)
+
+        # Act
+        response = self.client.delete(url)
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

@@ -132,7 +132,6 @@ import "vue-select/dist/vue-select.css";
 
 import vSelect from "vue-select";
 import { quillEditor } from "vue-quill-editor";
-import recipeAPI from "./api/recipe";
 import { ingredientsUnitMap } from "./utils";
 import ingredientAPI from "./api/ingredients";
 
@@ -200,7 +199,7 @@ export default {
             ingredient: val.ingredient.id
           }))
         };
-        await recipeAPI.addRecipe(payload);
+        await this.$store.dispatch("createRecipe", payload);
         this.$router.push({ name: "recipes" });
       } catch (err) {
         console.log(err);
