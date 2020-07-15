@@ -29,12 +29,12 @@
       </div>
     </div>
     <router-link
-      v-show="user"
+      v-show="profile"
       :to="{ name: 'profile' }"
       class="block mt-4 lg:inline-block text-white lg:mt-0 hover:text-white mr-4"
       tag="button"
     >
-      Profile
+      {{ profile.username }}
     </router-link>
     <button v-show="user" class="text-white" @click="logout">
       Logout
@@ -57,7 +57,7 @@ import LogoUrl from "../assets/logo.svg";
 export default {
   name: "Navbar",
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["user", "profile"]),
     isLoggedOut() {
       return !this.user && this.$route.name === "home";
     }
