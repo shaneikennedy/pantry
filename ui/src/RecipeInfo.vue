@@ -33,7 +33,20 @@
           <div v-html="recipe.instructions"></div>
         </div>
         <div class="h-16 w-16 mr-0 mx-auto">
-          <i class="cursor-pointer material-icons md-24" @click="likeRecipe">favorite_border</i>
+          <i
+            v-show="!isRecipeLiked"
+            class="cursor-pointer material-icons md-24"
+            @click="likeRecipe"
+          >
+            favorite_border
+          </i>
+          <i
+            v-show="isRecipeLiked"
+            class="cursor-pointer material-icons md-24"
+            @click="unlikeRecipe"
+          >
+            favorite
+          </i>
         </div>
       </div>
     </div>
@@ -42,11 +55,21 @@
 
 <script>
 import recipeApi from "./api/recipe";
-import recipeLikesApi from "./api/recipeLikes";
 import { defaultRecipeImageUrl, ingredientsUnitMap } from "./utils";
+import { mapState } from "vuex";
 
 export default {
   name: "Recipe_info",
+  computed: {
+    ...mapState(["profile"]),
+    isRecipeLiked() {
+      const like = this.profile.likes.find(like => like.recipe === this.recipe.id);
+      if (like) {
+        return true;
+      }
+      return false;
+    }
+  },
   data() {
     return {
       recipe: [],
@@ -63,7 +86,11 @@ export default {
       const payload = {
         recipe: this.recipe.id
       };
-      await recipeLikesApi.likeRecipe(payload);
+      await this.$store.dispatch("likeRecipe", payload);
+    },
+    async unlikeRecipe() {
+      const like = this.profile.likes.find(like => like.recipe === this.recipe.id);
+      await this.$store.dispatch("unlikeRecipe", like.id);
     }
   }
 };

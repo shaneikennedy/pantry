@@ -4,6 +4,8 @@ import Vuex from 'vuex';
 import authAPI from './api/auth';
 import userAPI from './api/user';
 import recipeAPI from "./api/recipe";
+import recipeLikesApi from "./api/recipeLikes";
+
 
 Vue.use(Vuex);
 
@@ -33,7 +35,6 @@ const store = new Vuex.Store({
     async logoutUser(context) {
       await authAPI.logout();
       context.commit('setUser', null);
-    }
     },
     async fetchUserProfile(context) {
       const profile = await userAPI.getUser();
@@ -41,6 +42,14 @@ const store = new Vuex.Store({
     },
     async createRecipe(context, payload) {
       await recipeAPI.addRecipe(payload);
+      context.dispatch("fetchUserProfile");
+    },
+    async likeRecipe(context, payload) {
+      await recipeLikesApi.likeRecipe(payload);
+      context.dispatch("fetchUserProfile");
+    },
+    async unlikeRecipe(context, likeId) {
+      await recipeLikesApi.unlikeRecipe(likeId);
       context.dispatch("fetchUserProfile");
     },
   }

@@ -109,6 +109,7 @@ class UserAPITests(APITestCase):
         RecipeIngredient.objects.create(
             recipe=recipe, ingredient=ingredient2, quantity=10, units="G",
         )
+        like = RecipeLike.objects.create(recipe=recipe, user=user)
         self.client.force_authenticate(user=user)
 
         # Act
@@ -121,6 +122,9 @@ class UserAPITests(APITestCase):
         self.assertEqual(len(response.data["recipes"]), 1)
         self.assertEqual(response.data["recipes"][0]["name"], recipe_name)
         self.assertEqual(response.data["recipes"][0]["author"], user.id)
+        self.assertEqual(len(response.data["likes"]), 1)
+        self.assertEqual(response.data["likes"][0]["id"], like.id)
+
 
 
 class UserLikesAPITest(APITestCase):

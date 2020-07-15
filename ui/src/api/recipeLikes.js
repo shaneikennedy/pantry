@@ -5,6 +5,13 @@ async function likeRecipe(payload) {
     const response = await axios.post(url, payload);
     return response.data;
 }
+
+function unlikeRecipe(likeId) {
+    const url = `/api/accounts/user/likes/${likeId}`;
+    axios.delete(url);
+}
+
 export default {
-    likeRecipe
+  likeRecipe,
+  unlikeRecipe,
 };

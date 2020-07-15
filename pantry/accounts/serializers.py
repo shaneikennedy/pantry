@@ -22,15 +22,24 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class RecipeLikesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RecipeLike
+        fields = ("id", "user", "recipe")
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     recipes = RecipeSerializer(many=True, source="recipe_set.all")
+    likes = RecipeLikesSerializer(many=True, source="recipelike_set.all")
 
     class Meta:
         model = User
-        fields = ("username", "email", "date_joined", "recipes", "id")
-
-
-class RecipeLikesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RecipeLike
-        fields = ("user", "recipe")
+        fields = (
+            "username",
+            "email",
+            "date_joined",
+            "recipes",
+            "likes",
+            "id",
+        )
