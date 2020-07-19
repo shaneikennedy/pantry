@@ -1,3 +1,7 @@
+:root {
+  --pantry-brown: #603022;
+}
+
 .pantry-bg-red {
   background-color: #a1352d;
 }
