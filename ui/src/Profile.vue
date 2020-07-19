@@ -21,12 +21,12 @@
         </li>
       </ul>
     </div>
-    <div v-if="currentTab === 'user-recipes'">
+    <div class="flex" v-if="currentTab === 'user-recipes'">
       <div v-for="recipe in profile.recipes" :key="recipe.id" @click="goToDetailsPage(recipe.id)">
         <recipe-card :recipe="recipe" />
       </div>
     </div>
-    <div v-if="currentTab === 'user-likes'">
+    <div class="flex" v-if="currentTab === 'user-likes'">
       <div v-for="recipe in profile.likes" :key="recipe.id" @click="goToDetailsPage(recipe.id)">
         <recipe-card :recipe="recipe" />
       </div>
