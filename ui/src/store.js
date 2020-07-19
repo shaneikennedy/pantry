@@ -15,7 +15,7 @@ const store = new Vuex.Store({
     profile: null,
   },
   mutations: {
-    setUser (state, user) {
+    setUser(state, user) {
       state.user = user;
     },
     setProfile(state, profile) {
@@ -35,6 +35,7 @@ const store = new Vuex.Store({
     async logoutUser(context) {
       await authAPI.logout();
       context.commit('setUser', null);
+      context.commit('setProfile', null);
     },
     async fetchUserProfile(context) {
       const profile = await userAPI.getUser();

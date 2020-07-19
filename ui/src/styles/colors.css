@@ -1,12 +1,16 @@
+:root {
+  --pantry-brown: #603022;
+}
+
 .pantry-bg-red {
   background-color: #a1352d;
 }
 
 .pantry-bg-brown {
-  background-color: #603022;
+  background-color: var(--pantry-brown);
 }
 .pantry-text-brown {
-  color: #603022;
+  color: var(--pantry-brown);
 }
 .pantry-bg-yellow {
   background-color: #fbd54a;
