@@ -1,7 +1,7 @@
-ui:
+frontend:
 		cd ui && npm run serve
 
-backend:
+run-backend:
 		python manage.py runserver
 
 test:
@@ -13,8 +13,8 @@ lint:
 install:
 		python -m pip install -r requirements.txt
 
-install-ui:
-		cd ui && npm i
+install-fe:
+		cd ui && npm i && cd ..
 
 bootstrap:
 		python manage.py bootstrap

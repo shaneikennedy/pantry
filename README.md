@@ -27,7 +27,7 @@ make backend
 
 The django backend should now be running on port 8000.
 
-After this we need to run migrations and fill the database with some data to actually use the app:
+After this we need to run migrations and fill the database with some data to actually use the app. Open a new shell in the same directory and run the following:
 
 ``` shell
 python manage.py migrate
@@ -35,10 +35,11 @@ make bootstrap
 ```
 
 ## Running the frontend
+Open a new shell in the same directory and run the following to install npm packages and then run a frontend development server
 
 ``` shell
-make install-ui
-make ui
+make install-fe
+make frontend
 ```
 
 A frontend dev server should now be built and listening on port 8080. There is a dev configuration that proxies all requests matching '/api' to our django backend.
