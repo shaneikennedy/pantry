@@ -13,12 +13,21 @@ The code demo'd here will just be a REST api for checking out the ingredients th
 
 The list-endpoint are all paginated and support searching. To search, find the "filters" button in the UI. The list-endpoints also support creation (just scroll to the bottom and fill out the form)
 
+The detail endpoints are read-only.
+
+To see the endpoint-patterns you can checkout the files in the project `urls.py`, the ones I'd like to demo for you are in the `core` folder (each endpoint in this folder or django "app" are accessible at /api/rest-of-the-pattern/).
+
 I've pre-filled the database with a bunch of ingredients, a recipe, and a user (so that you can make a recipe for yourself).
 
 #### Caveats
 As this was a real project, there is some user/accounts code that made use of JWT in order to be able to talk to a custom frontend app. This functionality doesn't play well with the basic DjangoRestFramework UI so I've stripped the accounts api down a bit in order for the app to still build and test properly (aka don't visit those endpoints).
 
 ## Checking it out
+
+``` shell
+git clone git@github.com:shaneikennedy/pantry.git && cd pantry && git checkout lendo
+```
+
 The only dependencies here are docker, docker-compose and an internet connection
 
 ### Running tests
