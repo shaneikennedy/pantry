@@ -1,0 +1,41 @@
+# Right now, this file is a copy of .gitignore, eventaully they will differ
+# Ideally it should be a symbolic link of .gitignore for now but apparently docker
+# do not support .dockerignore as a symlink
+
+# Virtual environment
+venv
+env
+
+# Compiled files
+*.pyc
+*.swp
+
+# Test files
+.coverage
+coverage.txt
+htmlcov
+
+# Local settings file
+kog/config/settings/dev_local.py
+
+# Temp files
+tmp
+
+# Client files
+kog/config/webpack-stats-*.json
+node_modules
+kog/client_apps/static/bundles/
+
+# Compiled static files
+staticfiles
+
+# Misc
+*.db
+*.dump
+*.sql
+*.tar* 
+# Dockerfile
+cm/db/init-scripts/*
+
+# Pip private libs
+src

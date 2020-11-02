@@ -1,20 +1,25 @@
-frontend:
-		cd ui && npm run serve
+build:
+	docker build -t pantry/pantry .
 
-run-backend:
-		python manage.py runserver
+db:
+	docker-compose up --remove-orphans -d db
 
-test:
-		python manage.py test
+test: build db
+	docker-compose run web python manage.py test
 
 lint:
 		scripts/linting.sh
 
-install:
-		python -m pip install -r requirements.txt
-
-install-fe:
-		cd ui && npm i && cd ..
+clean:
+	docker-compose down
 
 bootstrap:
-		python manage.py bootstrap
+	docker-compose run web python manage.py bootstrap
+
+migrate:
+	docker-compose run web python manage.py migrate
+
+see: db build migrate bootstrap
+	docker-compose up -d web
+	sleep 5
+	open http://localhost:8000/api/ingredients
