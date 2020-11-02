@@ -32,33 +32,33 @@ class IngredientsAPITests(APITestCase):
         # Assert
         expected_num_ingredients = Ingredient.objects.count()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), expected_num_ingredients)
+        self.assertEqual(len(response.data["results"]), expected_num_ingredients)
 
-        response_names = [item["name"] for item in response.data]
+        response_names = [item["name"] for item in response.data["results"]]
 
         for name in response_names:
             self.assertIn(name, self.ingredient_names)
 
     def test_GET_SearchByName_ReturFiiteredResults(self):
         params = {
-            "item": "artichoke",
+            "search": "artichoke",
         }
 
         response = self.client.get(self.url, params)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual("artichoke", response.data[0]["name"])
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual("artichoke", response.data["results"][0]["name"])
 
-    def test_GET_EmptySearch_ShouldReturnAllIngredients(self):
+    def test_GET_EmptySearch_ShouldReturnNoIngredients(self):
         expected_num_ingredients = Ingredient.objects.count()
         params = {
-            "item": "",
+            "search": "",
         }
 
         response = self.client.get(self.url, params)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), expected_num_ingredients)
+        self.assertEqual(len(response.data["results"]), expected_num_ingredients)
 
     def test_POST_IngredientAlreadyExists_IngredientNotCreated(self):
         # Arrange
@@ -117,20 +117,24 @@ class RecipesAPITests(APITestCase):
 
         # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["id"], recipe.id)
-        self.assertEqual(response.data[0]["name"], "Pasta")
-        self.assertEqual(response.data[0]["instructions"], "Make the pasta")
-        self.assertEqual(response.data[0]["ingredients"][0]["name"], "tomato")
-        self.assertEqual(response.data[0]["ingredients"][0]["quantity"], 300)
-        self.assertEqual(response.data[0]["ingredients"][0]["units"], "G")
-        self.assertEqual(response.data[0]["ingredients"][1]["name"], "basil")
-        self.assertEqual(response.data[0]["ingredients"][1]["quantity"], 10)
-        self.assertEqual(response.data[0]["ingredients"][1]["units"], "G")
+        self.assertEqual(response.data["results"][0]["id"], recipe.id)
+        self.assertEqual(response.data["results"][0]["name"], "Pasta")
+        self.assertEqual(response.data["results"][0]["instructions"], "Make the pasta")
+        self.assertEqual(
+            response.data["results"][0]["ingredients"][0]["name"], "tomato"
+        )
+        self.assertEqual(response.data["results"][0]["ingredients"][0]["quantity"], 300)
+        self.assertEqual(response.data["results"][0]["ingredients"][0]["units"], "G")
+        self.assertEqual(response.data["results"][0]["ingredients"][1]["name"], "basil")
+        self.assertEqual(response.data["results"][0]["ingredients"][1]["quantity"], 10)
+        self.assertEqual(response.data["results"][0]["ingredients"][1]["units"], "G")
 
     def test_POST_ValidData_CreateRecipe(self):
         # Arrange
+        user = User.objects.create_user(username="melissa")
         i = Ingredient.objects.create(name="cheese")
         recipe = {
+            "author": user.id,
             "name": "Pasta",
             "instructions": "Make pasta",
             "ingredients": [{"ingredient": i.id, "quantity": 5, "units": "G"},],
@@ -170,31 +174,6 @@ class RecipesAPITests(APITestCase):
 
 
 class RecipeDetailAPITest(APITestCase):
-    def test_GET_UnAuthentication_Return401(self):
-        # Arrange
-        user = User.objects.create_user(username="melissa")
-        recipe = Recipe.objects.create(name="Grilled Cheese", author=user)
-        url = reverse("recipe-detail", args=[recipe.id])
-
-        # Act
-        response = self.client.get(url)
-
-        # Assert
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_GET_Authenticated_Return200(self):
-        # Arrange
-        user = User.objects.create_user(username="melissa")
-        recipe = Recipe.objects.create(name="Grilled Cheese", author=user)
-        url = reverse("recipe-detail", args=[recipe.id])
-        self.client.force_authenticate(user=user)
-
-        # Act
-        response = self.client.get(url)
-
-        # Assert
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
     def test_GET_RecipeDoesNotExist_Return404(self):
         # Arrange
         user = User.objects.create_user(username="melissa")

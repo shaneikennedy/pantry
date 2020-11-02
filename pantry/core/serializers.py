@@ -19,7 +19,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
-        source="recipeingredient_set", many=True,
+        source="recipeingredient_set", many=True, required=False
     )
     author_username = serializers.CharField(
         read_only=True, source='author.username'
@@ -37,7 +37,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        recipe_ingredients = validated_data.pop("recipeingredient_set")
+        recipe_ingredients = []
+        if "recipeingredient_set" in validated_data:
+            recipe_ingredients = validated_data.pop("recipeingredient_set")
+
         recipe = Recipe.objects.create(**validated_data)
         for recipe_ingredient in recipe_ingredients:
             RecipeIngredient.objects.create(recipe=recipe, **recipe_ingredient)

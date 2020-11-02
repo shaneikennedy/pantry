@@ -88,14 +88,13 @@ WSGI_APPLICATION = 'pantry.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pantry',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'root',
+        'PASSWORD': 'postgres',
         'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-        'PORT': '5432',
+        'PORT': 5432,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

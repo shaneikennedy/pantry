@@ -78,17 +78,6 @@ class UserAPITests(APITestCase):
         # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_GET_NotAuthenicated_Return401(self):
-
-        # Arrange
-        url = reverse("user")
-
-        # Act
-        response = self.client.get(url)
-
-        # Assert
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
     def test_GET__ReturnUserInfo(self):
 
         # Arrange
@@ -138,14 +127,6 @@ class UserLikesAPITest(APITestCase):
     def setUp(self):
         self.client.force_authenticate(user=self.user)
 
-    def test_POST_Unauthenticated_Return401(self):
-        # Act
-        self.client.logout()
-        response = self.client.post(self.url)
-
-        # Assert
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
     def test_POST_ValidData_RecipeLikeCreated(self):
         # Arrange
         recipe = Recipe.objects.create(
@@ -190,15 +171,6 @@ class UserLikesDetailAPITests(APITestCase):
 
     def setUp(self):
         self.client.force_authenticate(user=self.user)
-
-    def test_DELETE_Unauthenticated_Return401(self):
-        # Act
-        url = reverse("likes-detail", args=[200])
-        self.client.logout()
-        response = self.client.post(url)
-
-        # Assert
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_DELETE_UserLikeExists_ShouldDelete(self):
         # Arrange

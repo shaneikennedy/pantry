@@ -51,7 +51,6 @@ login_api = LoginAPIView.as_view()
 
 
 class UserAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         serializer = UserProfileSerializer(request.user)
@@ -63,7 +62,6 @@ user_api = UserAPIView.as_view()
 
 
 class UserLikesAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
 
     def post(self, request):
         recipe_like = request.data
@@ -81,7 +79,6 @@ user_likes_api = UserLikesAPIView.as_view()
 
 
 class UserLikesDetailAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
 
     def delete(self, request, recipe_like_id):
         recipe_like = get_object_or_404(

@@ -1,48 +1,31 @@
 # Pantry
 
-This is the repository for the pantry app.
+## Intro
+Hi, Lendo!
 
-## Getting started
-This project uses python [Django 3.x](https://docs.djangoproject.com/en/3.0/)
+This is a project I call pantry. It was something that my sister and I started at the begining of the covid-19 pandemic. My sister is now in her final year of a computer science degree back in Canada and wanted to learn web development on a more long term, and production-ready codebase (aka something more than just a quick assignment).
 
-## Dependencies
-* [Postgresql](https://postgresapp.com/)
-* [Python 3.8.2](https://www.python.org/ftp/python/3.8.2/python-3.8.2-macosx10.9.pkg)
+The idea behind this app is a crowd-sourced Recipe Catalog. Users should be able to create their own recipes, discover others' recipes, and like them to save for later.
 
-## Setting up the database
-Make sure the `psql` command is available
+## For Lendo
+The main branch of this repo has frontend code so that a real user could eventually use it, but for simplicity and the purpose of this role I figured that stripping it down to an API would be best.
+The code demo'd here will just be a REST api for checking out the ingredients that are available (as well as adding one's that aren't there), searching existing recipes and creating some of your own.
 
-Then run `psql -c "CREATE DATABASE pantry;"` to create the database we will be using.
+The list-endpoint are all paginated and support searching. To search, find the "filters" button in the UI. The list-endpoints also support creation (just scroll to the bottom and fill out the form)
 
-## Running the backend
-*Use a virtual environment*
+I've pre-filled the database with a bunch of ingredients, a recipe, and a user (so that you can make a recipe for yourself).
 
-I recommend [pyenv](https://github.com/pyenv/pyenv) but feel free to use the builtin python `venv` package (just be sure to activate it when you're working on this project)
+#### Caveats
+As this was a real project, there is some user/accounts code that made use of JWT in order to be able to talk to a custom frontend app. This functionality doesn't play well with the basic DjangoRestFramework UI so I've stripped the accounts api down a bit in order for the app to still build and test properly (aka don't visit those endpoints).
 
-Install the pip dependencies and run the development server
-``` shell
-make install
-make backend
-```
+## Checking it out
+The only dependencies here are docker, docker-compose and an internet connection
 
-The django backend should now be running on port 8000.
+### Running tests
+`make test`
 
-After this we need to run migrations and fill the database with some data to actually use the app. Open a new shell in the same directory and run the following:
+### Checking out the API ui
+`make see`
 
-``` shell
-python manage.py migrate
-make bootstrap
-```
-
-## Running the frontend
-Open a new shell in the same directory and run the following to install npm packages and then run a frontend development server
-
-``` shell
-make install-fe
-make frontend
-```
-
-A frontend dev server should now be built and listening on port 8080. There is a dev configuration that proxies all requests matching '/api' to our django backend.
-
-## Running tests
-`python manage.py test pantry`
+### Tearing it all down
+`make clean`
