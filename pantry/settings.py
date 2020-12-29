@@ -20,13 +20,29 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'v&v*2sacrly2o=o7qe--y$9+gnz8ksw^zba2xjv^p4k*-pk7r$'
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
+# Development secret key, must be overriden in production.py
+SECRET_KEY = "v&v*2sacrly2o=o7qe--y$9+gnz8ksw^zba2xjv^p4k*-pk7r$"
 DEBUG = True
 
-ALLOWED_HOSTS = []
+default_database = {
+    "ENGINE": "django.db.backends.postgresql",
+    "NAME": "pantry",
+    "USER": "postgres",
+    "PASSWORD": "root",
+    "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+    "PORT": "5432",
+}
+
+if os.getenv("DATABASE_URL"):
+    default_database = dj_database_url.config(conn_max_age=600)
+
+DATABASES = {"default": default_database}
+
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
@@ -84,25 +100,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'pantry.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-
-if os.getenv('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'pantry',
-            'USER': 'postgres',
-            'PASSWORD': 'root',
-            'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-            'PORT': '5432',
-        }
-    }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -139,4 +136,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "static/"
