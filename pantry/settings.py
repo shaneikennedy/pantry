@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Development secret key, must be overriden in production.py
 SECRET_KEY = "v&v*2sacrly2o=o7qe--y$9+gnz8ksw^zba2xjv^p4k*-pk7r$"
@@ -42,7 +42,6 @@ if os.getenv("DATABASE_URL"):
     default_database = dj_database_url.config(conn_max_age=600)
 
 DATABASES = {"default": default_database}
-
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
@@ -131,9 +130,3 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = "static/"
