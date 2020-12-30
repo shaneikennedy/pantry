@@ -3,6 +3,10 @@
 # If you want to add your own custom gitignore rules, on top of this, use .git/info/excludes
 # That file is not versioned and only local on your machine.
 
+# Staticfiles
+staticfiles/
+static/
+
 # Virtual environment
 venv
 env

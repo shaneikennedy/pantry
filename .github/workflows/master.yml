@@ -1,0 +1,56 @@
+name: Master
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+
+    container: python:3.8-buster
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: root
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: make install
+    - name: Linting
+      run: make lint
+    - name: Tests
+      run: make test
+      env:
+        POSTGRES_HOST: postgres
+        POSTGRES_PORT: 5432
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to heroku container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+
+      - name: Build and push container
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:push web --app pantry-backend-prod
+
+      - name: Release to production
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release web --app pantry-backend-prod

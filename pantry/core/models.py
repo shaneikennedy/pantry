@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin
 
 from django.contrib.auth.models import User
 
@@ -19,13 +20,14 @@ class Ingredient(models.Model):
         super().save(*args, **kwargs)
 
 
+admin.register(Ingredient)(admin.ModelAdmin)
+
+
 class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     instructions = models.TextField(blank=True, default="")
-    ingredients = models.ManyToManyField(
-        Ingredient, through="RecipeIngredient"
-    )
+    ingredients = models.ManyToManyField(Ingredient, through="RecipeIngredient")
 
     objects = models.Manager()
 
@@ -59,6 +61,5 @@ class RecipeIngredient(models.Model):
 
     def __str__(self):
         return (
-            f"{self.quantity} {self.units} "
-            f"of {self.ingredient} for {self.recipe}"
+            f"{self.quantity} {self.units} " f"of {self.ingredient} for {self.recipe}"
         )
