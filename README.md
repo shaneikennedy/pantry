@@ -1,6 +1,6 @@
 # Pantry
 
-This is the repository for the pantry app.
+This is the repository for the pantry app. The pantry app allows you to upload recipes and ingredients.
 
 ## Getting started
 This project uses python [Django 3.x](https://docs.djangoproject.com/en/3.0/)
@@ -46,3 +46,4 @@ A frontend dev server should now be built and listening on port 8080. There is a
 
 ## Running tests
 `python manage.py test pantry`
+
